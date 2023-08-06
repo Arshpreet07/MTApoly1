@@ -1,45 +1,16 @@
-# MTApoly1
+# ERC20 Goerli to Mumbai Bridge Using fxPortal
+This project demonstrates how to use the fxPortal contracts to transfer ERC20 tokens from Goerli to Mumbai.
 
-For this project, we will deploy an NFT collection on the Ethereum blockchain, Map the collection to Polygon, and Transfer assets over via the Polygon Bridge. To put a twist on the project we use an image generation tool - like DALLE 2 or Midjourney - to the images for your NFTs.
+### Steps for Bridging
 
-## Description
-
-this program is a simple ERC721 token which is an NFT collection which we deploy on eth blockchain. 
-
-### Executing program
-
-To run this program, you can use Remix, an online Solidity IDE. To get started, go to the Remix website at https://remix.ethereum.org/.
-
-Once you are on the Remix website, create a new file by clicking on the "+" icon in the left-hand sidebar. Save the file with a .sol extension (e.g., HelloWorld.sol). Copy and paste the following code into the file:
-
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
-
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-
-contract MetaToken is ERC721, Ownable {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-    constructor() ERC721("Meta", "MTA") {}
-
-    string uri = "https://gateway.pinata.cloud/ipfs/QmayYF9SYgpAXhjVcRGiktu8HN6boGEwcCc94nD4G683Pm";
-
-    string prompt = "a car drifting which is a bmw on an empty road m4 series";
-
-    function Minting(address to) public onlyOwner returns(uint256 ){
-        _tokenIds.increment();
-        uint256 tokenId = _tokenIds.current();
-        _safeMint(to, tokenId);
-        return tokenId;
-    }
-    function promptDescription() external view returns (string memory) {
-        return prompt;
-    }
-}
-
-## Authors
-
-Arshpreet Singh  
-@Arshpreet07
+1. Run npm i to install dependencies
+2. Put your private key in the .env.examples file and rename to .env when finished
+3. Run npx hardhat run scripts/deploy.js --network goerli to deploy ERC20 contract
+4. Paste the newly deployed contract address in the tokenAddress variable for the other scripts
+5. Make sure to fill in your public key
+6. Run npx hardhat run scripts/mint.js --network goerli to mint tokens to your wallet
+7. Run npx hardhat run scripts/approveDeposit.js --network goerli to approve and deposit your tokens to polygon
+8. Wait 20-30ish minutes for tokens to show on polygon account
+9. Use polyscan.com to check your account for the tokens. Once they arrive, you can click on the transaction to get the contract address for polygon.
+10. Use this polygon contract address for your getBalance script's tokenAddress
+11. Run npx hardhat run scripts/getBalance.js --network mumbai to see the new polygon balance
